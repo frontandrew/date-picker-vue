@@ -3,6 +3,7 @@ import { ref } from "vue";
 
 import { Input, Popup, IconButton } from "../../atoms";
 import { CalendarIcon } from "../../../icons";
+import { Calendar } from "../calendar"
 
 import type { DatePickerProps } from "./type";
 
@@ -26,7 +27,9 @@ const popUpAnchor = ref('--input-anchor');
             <IconButton />
         </template>
         </Input>
-        <Popup :anchor="popUpAnchor" :is-open="isCalendarVisible" />
+        <Popup :anchor="popUpAnchor" :is-open="isCalendarVisible">
+            <Calendar />
+        </Popup>
     </div>
 </template>
 
