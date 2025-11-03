@@ -1,13 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-
 import type { PopupProps } from './type';
 
-const props = withDefaults(defineProps<PopupProps>(), {
-    isOpen: true,
-});
+const props = defineProps<PopupProps>()
 
-const isOpen = ref(props.isOpen);
 </script>
 
 <template>

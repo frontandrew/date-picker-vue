@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
 import type { InputProps } from './type';
 
 const props = defineProps<InputProps>()
-const inputElement = useTemplateRef('input');
-
 </script>
 
 <template>
-    <div class="root" @click="inputElement!.focus()">
+    <div class="root">
         <label :for="props.id" v-show="props.label">{{ props.label }}</label>
         <div class="container">
             <slot name="left"></slot>
-            <input :id="props.id" class="input" :name="props.name" ref="input" :value="props.value" />
+            <input :id="props.id" class="input" :name="props.name" :value="props.value" />
             <slot name="right"></slot>
         </div>
     </div>
