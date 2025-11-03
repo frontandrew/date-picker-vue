@@ -16,7 +16,7 @@ const { icon } = useSlots();
             <button class="action" v-show="icon">
                 <slot name="icon"></slot>
             </button>
-            <input :id="props.id" class="input" :name="props.name" ref="input" />
+            <input :id="props.id" class="input" :name="props.name" ref="input" :value="props.value" />
             <button class="action" v-show="true" @click="inputElement!.value = ''">
                 <i>✕</i>
             </button>
@@ -59,9 +59,6 @@ const { icon } = useSlots();
 }
 
 .action {
-    background: unset;
-    border: unset;
-    outline: unset;
     border-radius: calc(1rem / 8);
     padding: calc(1rem / 8);
 
