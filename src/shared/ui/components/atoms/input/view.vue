@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { useSlots, useTemplateRef } from 'vue';
+import { useTemplateRef } from 'vue';
 import type { InputProps } from './type';
 
 const props = defineProps<InputProps>()
 const inputElement = useTemplateRef('input');
-
-const { icon } = useSlots();
 
 </script>
 
@@ -13,13 +11,9 @@ const { icon } = useSlots();
     <div class="root" @click="inputElement!.focus()">
         <label :for="props.id" v-show="props.label">{{ props.label }}</label>
         <div class="container">
-            <button class="action" v-show="icon">
-                <slot name="icon"></slot>
-            </button>
+            <slot name="left"></slot>
             <input :id="props.id" class="input" :name="props.name" ref="input" :value="props.value" />
-            <button class="action" v-show="true" @click="inputElement!.value = ''">
-                <i>✕</i>
-            </button>
+            <slot name="right"></slot>
         </div>
     </div>
 </template>
@@ -56,31 +50,5 @@ const { icon } = useSlots();
     flex-grow: 1;
     padding: calc(1rem / 8);
     line-height: 1rem;
-}
-
-.action {
-    border-radius: calc(1rem / 8);
-    padding: calc(1rem / 8);
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-
-    &:focus,
-    &:focus-visible,
-    &:hover {
-        background-color: var(--accent-color);
-    }
-
-    &:active {
-        background-color: hsl(from var(--accent-color) h s calc(l - 10));
-    }
-
-    i {
-        width: 1rem;
-        height: 1rem;
-        line-height: 1rem;
-    }
 }
 </style>

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import { Input } from "../../atoms/input";
-import { Popup } from "../../atoms/pop-up";
+import { Input, Popup, IconButton } from "../../atoms";
 import { CalendarIcon } from "../../../icons";
 
 import type { DatePickerProps } from "./type";
@@ -18,8 +17,13 @@ const popUpAnchor = ref('--input-anchor');
 <template>
     <div class="container">
         <Input id="date-picker-input" name="date-picker" :value="props.value">
-        <template #icon>
-            <CalendarIcon />
+        <template #left>
+            <IconButton>
+                <CalendarIcon />
+            </IconButton>
+        </template>
+        <template #right>
+            <IconButton />
         </template>
         </Input>
         <Popup :anchor="popUpAnchor" :is-open="isPickerOpen" />
