@@ -45,7 +45,7 @@ const props = defineProps<InputProps>()
 
 .input {
     flex-grow: 1;
-    padding: calc(1rem / 8);
+    padding: calc(1rem / 16);
     line-height: 1rem;
 }
 </style>

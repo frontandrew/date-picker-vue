@@ -2,16 +2,18 @@
 
 <template>
     <button class="icon-button">
-        <slot>
-            <i>✕</i>
-        </slot>
+        <slot>✕</slot>
     </button>
 </template>
 
 <style scoped>
 .icon-button {
     border-radius: calc(1rem / 8);
-    padding: calc(1rem / 8);
+    aspect-ratio: 1;
+
+    width: 1.25rem;
+    height: 1.25rem;
+    line-height: 1rem;
 
     display: flex;
     justify-content: center;
@@ -26,12 +28,6 @@
 
     &:active {
         background-color: hsl(from var(--accent-color) h s calc(l - 10));
-    }
-
-    >i {
-        width: 1rem;
-        height: 1rem;
-        line-height: 1rem;
     }
 }
 </style>
