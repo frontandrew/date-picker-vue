@@ -40,18 +40,32 @@ body {
   height: 100%;
 }
 
-button,
-input {
-  background: unset;
-  border: unset;
-  outline: unset;
-  font-size: var(--font-size);
-}
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
   }
 
+}
+
+/* RESETS */
+
+button,
+input {
+  background: unset;
+  padding: unset;
+  margin: unset;
+  border: unset;
+  outline: unset;
+  font-size: var(--font-size);
+}
+
+ul {
+  list-style: unset;
+  margin: unset;
+  padding: unset;
+}
+
+li {
+  display: block;
 }
