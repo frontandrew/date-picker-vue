@@ -7,7 +7,7 @@ const props = defineProps<PopupProps>()
 
 <template>
     <Teleport to="#app">
-        <div v-if="isOpen" class="pop-up">
+        <div v-show="isOpen" class="pop-up">
             <slot name="header"></slot>
             <slot></slot>
             <slot name="footer"></slot>
