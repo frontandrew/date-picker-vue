@@ -1,9 +1,5 @@
-export type CalendarProps = {
+export type CalendarDate = {
     date: Date;
-}
-
-export interface CalendarDate {
-    date: CalendarProps["date"]
     selected: boolean;
     isTargetMonth: boolean;
 }

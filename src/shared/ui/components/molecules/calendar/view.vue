@@ -1,27 +1,33 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { format } from 'date-fns';
+import { computed, onUpdated, ref } from 'vue';
+import { format, parse } from 'date-fns';
 
 import { IconButton } from '../../atoms';
 
-import type { CalendarProps } from './type';
 import { getDatesIntervalByDate } from './utils';
 
-const props = defineProps<CalendarProps>()
+const dateModel = defineModel<string>('date', { required: true })
 
-const calendarDates = ref(getDatesIntervalByDate(props.date))
-const month = format(props.date, 'MMM');
-const year = props.date.getFullYear();
-const days = calendarDates.value.slice(0, 7).map(({ date }) => format(date, 'ccc'))
+const date = computed(() => parse(dateModel.value, 'd.M.y', new Date()))
+const calendarDates = computed(() => getDatesIntervalByDate(date.value))
+const month = computed(() => format(date.value, 'MMM'));
+const year = computed(() => date.value.getFullYear());
+const days = computed(() => calendarDates.value.slice(0, 7).map(({ date }) => format(date, 'ccc')));
+
+onUpdated(() => {
+    dateModel
+    console.log('CALENDAR MODEL:', dateModel.value)
+    console.log('CALENDAR DATE:', date.value)
+})
 </script>
 
 <template>
     <div class="root">
         <div class="actions">
-            <IconButton>◂</IconButton>
+            <IconButton name="prev-month">◂</IconButton>
             <span class="month-year">{{ month }}</span>
             <span class="month-year">{{ year }}</span>
-            <IconButton>▸</IconButton>
+            <IconButton name="next-month">▸</IconButton>
         </div>
         <ul class="days grid-row">
             <li v-for="day in days">{{ day }}</li>
@@ -31,7 +37,7 @@ const days = calendarDates.value.slice(0, 7).map(({ date }) => format(date, 'ccc
                 <IconButton :class="{
                     'date-selected': item.selected,
                     'date-from-another-month': !item.isTargetMonth,
-                }">
+                }" :name="item.date.toISOString()">
                     {{ item.date.getDate() }}
                 </IconButton>
             </li>

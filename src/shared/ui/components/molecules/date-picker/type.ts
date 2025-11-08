@@ -1,3 +1,3 @@
 import type { InputProps } from "../../atoms/input/type";
 
-export type DatePickerProps = {} & InputProps
+export type DatePickerProps = {} & InputProps;

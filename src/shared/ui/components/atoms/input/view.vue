@@ -1,7 +1,15 @@
 <script setup lang="ts">
+import { onUpdated } from 'vue';
 import type { InputProps } from './type';
 
-const props = defineProps<InputProps>()
+const props = defineProps<InputProps>();
+const value = defineModel('value');
+
+onUpdated(() => {
+    console.log('INPUT VALUE:', value)
+})
+
+
 </script>
 
 <template>
@@ -9,7 +17,7 @@ const props = defineProps<InputProps>()
         <label :for="props.id" v-show="props.label">{{ props.label }}</label>
         <div class="container">
             <slot name="left"></slot>
-            <input :id="props.id" class="input" :name="props.name" :value="props.value" />
+            <input :id="props.id" class="input" :name="props.name" v-model="value" :placeholder="props.placeholder"/>
             <slot name="right"></slot>
         </div>
     </div>
@@ -47,5 +55,9 @@ const props = defineProps<InputProps>()
     flex-grow: 1;
     padding: calc(1rem / 16);
     line-height: 1rem;
+}
+
+.input::placeholder {
+    color: hsl(from var(--text-color) h s calc(l - 50));
 }
 </style>
