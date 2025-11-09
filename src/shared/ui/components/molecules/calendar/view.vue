@@ -1,62 +1,65 @@
 <script setup lang="ts">
-import { computed, onUpdated, reactive } from 'vue';
-import { add, addMonths, format, isValid, parse } from 'date-fns';
+import { computed, reactive } from 'vue';
+import { addMonths, format, isValid } from 'date-fns';
 
 import { IconButton } from '../../atoms';
-
 import { getDatesIntervalByDate } from './utils';
 
-const dateModel = defineModel<Date>('date', { default: new Date() })
+const selectedDate = defineModel<Date>('date', { default: new Date() })
 
-const selectedDate = reactive({
-    value: dateModel.value,
+const currentMonthDate = reactive({
+    value: selectedDate.value,
 })
 
-const changeMonth = (step: number) => {
-    selectedDate.value = addMonths(selectedDate.value, step)
+const changeCurrentMonth = (step: number) => {
+    currentMonthDate.value = addMonths(currentMonthDate.value, step)
 }
 
-const setDate = ({ target }: Event & { target: { name: string | undefined }}) => {
+const setCurrentMonthDate = ({ target }: Event & { target: { name: string | undefined }}) => {
     
     if (!!target && typeof target.name === 'string' && isValid(new Date(target.name))) {        
-        selectedDate.value = new Date(target.name)
-        dateModel.value = selectedDate.value
+        currentMonthDate.value = new Date(target.name)
+        selectedDate.value = currentMonthDate.value
     }
 }
 
-const calendarDates = computed(() => getDatesIntervalByDate(selectedDate.value))
-const month = computed(() => format(selectedDate.value, 'MMM'));
-const year = computed(() => selectedDate.value.getFullYear());
-const days = computed(() => calendarDates.value.slice(0, 7).map(({ date }) => format(date, 'ccc')));
+const calendarDates = computed(() => getDatesIntervalByDate(currentMonthDate.value))
+const selectedMonthName = computed(() => format(currentMonthDate.value, 'MMM'));
+const selectedYearName = computed(() => currentMonthDate.value.getFullYear());
+const weekDaysNames = computed(() => calendarDates.value.slice(0, 7).map((date) => format(date, 'ccc')));
 
-onUpdated(() => {
-    console.log('CALENDAR MODEL:', selectedDate.value)
-    console.log('CALENDAR DATE:', selectedDate.value)
-})
+const isSelectedDate = (date: Date) => {
+    return format(date, 'yyyy-MM-dd') === format(selectedDate.value, 'yyyy-MM-dd')
+}
+
+const isAnotherMonth = (date: Date) => {
+    return format(date, 'MMM') !== selectedMonthName.value;
+}
+
 </script>
 
 <template>
     <div class="root">
         <div class="actions">
-            <IconButton name="prev-month" @click="changeMonth(-1)">◂</IconButton>
-            <span class="month-year">{{ month }}</span>
-            <span class="month-year">{{ year }}</span>
-            <IconButton name="next-month" @click="changeMonth(1)">▸</IconButton>
+            <IconButton @click="changeCurrentMonth(-1)">◂</IconButton>
+            <span class="month-year">{{ selectedMonthName }}</span>
+            <span class="month-year">{{ selectedYearName }}</span>
+            <IconButton @click="changeCurrentMonth(1)">▸</IconButton>
         </div>
         <ul class="days grid-row">
-            <li v-for="day in days">{{ day }}</li>
+            <li v-for="day in weekDaysNames">{{ day }}</li>
         </ul>
         <ul class="dates grid-row">
-            <li v-for="item in calendarDates">
+            <li v-for="date in calendarDates">
                 <IconButton
                     :class="{
-                        'date-selected': item.selected,
-                        'date-from-another-month': !item.isTargetMonth,
+                        'date-selected': isSelectedDate(date),
+                        'date-from-another-month': isAnotherMonth(date),
                     }"
-                    :name="format(item.date, 'yyyy-MM-dd')"
-                    @click="setDate"
+                    :name="format(date, 'yyyy-MM-dd')"
+                    @click="setCurrentMonthDate"
                 >
-                    {{ item.date.getDate() }}
+                    {{ date.getDate() }}
                 </IconButton>
             </li>
         </ul>
