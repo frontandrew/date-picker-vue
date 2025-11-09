@@ -1,43 +1,61 @@
 <script setup lang="ts">
-import { computed, onUpdated, ref } from 'vue';
-import { format, parse } from 'date-fns';
+import { computed, onUpdated, reactive } from 'vue';
+import { add, addMonths, format, isValid, parse } from 'date-fns';
 
 import { IconButton } from '../../atoms';
 
 import { getDatesIntervalByDate } from './utils';
 
-const dateModel = defineModel<string>('date', { required: true })
+const dateModel = defineModel<Date>('date', { default: new Date() })
 
-const date = computed(() => parse(dateModel.value, 'd.M.y', new Date()))
-const calendarDates = computed(() => getDatesIntervalByDate(date.value))
-const month = computed(() => format(date.value, 'MMM'));
-const year = computed(() => date.value.getFullYear());
+const selectedDate = reactive({
+    value: dateModel.value,
+})
+
+const changeMonth = (step: number) => {
+    selectedDate.value = addMonths(selectedDate.value, step)
+}
+
+const setDate = ({ target }: Event & { target: { name: string | undefined }}) => {
+    
+    if (!!target && typeof target.name === 'string' && isValid(new Date(target.name))) {        
+        selectedDate.value = new Date(target.name)
+        dateModel.value = selectedDate.value
+    }
+}
+
+const calendarDates = computed(() => getDatesIntervalByDate(selectedDate.value))
+const month = computed(() => format(selectedDate.value, 'MMM'));
+const year = computed(() => selectedDate.value.getFullYear());
 const days = computed(() => calendarDates.value.slice(0, 7).map(({ date }) => format(date, 'ccc')));
 
 onUpdated(() => {
-    dateModel
-    console.log('CALENDAR MODEL:', dateModel.value)
-    console.log('CALENDAR DATE:', date.value)
+    console.log('CALENDAR MODEL:', selectedDate.value)
+    console.log('CALENDAR DATE:', selectedDate.value)
 })
 </script>
 
 <template>
     <div class="root">
         <div class="actions">
-            <IconButton name="prev-month">◂</IconButton>
+            <IconButton name="prev-month" @click="changeMonth(-1)">◂</IconButton>
             <span class="month-year">{{ month }}</span>
             <span class="month-year">{{ year }}</span>
-            <IconButton name="next-month">▸</IconButton>
+            <IconButton name="next-month" @click="changeMonth(1)">▸</IconButton>
         </div>
         <ul class="days grid-row">
             <li v-for="day in days">{{ day }}</li>
         </ul>
         <ul class="dates grid-row">
             <li v-for="item in calendarDates">
-                <IconButton :class="{
-                    'date-selected': item.selected,
-                    'date-from-another-month': !item.isTargetMonth,
-                }" :name="item.date.toISOString()">
+                <IconButton
+                    :class="{
+                        'date-selected': item.selected,
+                        'date-from-another-month': !item.isTargetMonth,
+                    }"
+                    :name="format(item.date, 'yyyy-MM-dd')"
+                    @click="setDate"
+                >
                     {{ item.date.getDate() }}
                 </IconButton>
             </li>
