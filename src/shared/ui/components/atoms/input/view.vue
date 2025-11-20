@@ -6,7 +6,7 @@ const props = defineProps<InputProps>();
 const value = defineModel('value');
 
 onUpdated(() => {
-    console.log('INPUT VALUE:', value)
+    console.log('INPUT VALUE:', value.value)
 })
 
 
@@ -14,10 +14,10 @@ onUpdated(() => {
 
 <template>
     <div class="root">
-        <label :for="props.id" v-show="props.label">{{ props.label }}</label>
-        <div class="container">
+        <label :class="{ 'invalid': props.hasError }" :for="props.id" v-show="props.label">{{ props.label }}</label>
+        <div :class="{ 'container': true, 'invalid': props.hasError }">
             <slot name="left"></slot>
-            <input :id="props.id" class="input" :name="props.name" v-model="value" :placeholder="props.placeholder"/>
+            <input :id="props.id" class="input" :name="props.name" v-model="value" :placeholder="props.placeholder" />
             <slot name="right"></slot>
         </div>
     </div>
@@ -51,11 +51,21 @@ onUpdated(() => {
     }
 }
 
+.invalid {
+    border-color: var(--error-color);
+    color: var(--error-color);
+    &:focus-within {
+        border-color: var(--error-color);
+    }
+}
+
 .input {
     flex-grow: 1;
     padding: calc(1rem / 16);
     line-height: 1rem;
 }
+
+.input-error {}
 
 .input::placeholder {
     color: hsl(from var(--text-color) h s calc(l - 50));

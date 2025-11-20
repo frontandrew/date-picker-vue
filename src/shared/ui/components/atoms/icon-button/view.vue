@@ -20,7 +20,7 @@
     align-items: center;
     cursor: pointer;
 
-    &:focus,
+    /* &:focus, */
     &:focus-visible,
     &:hover {
         background-color: var(--accent-color);

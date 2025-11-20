@@ -4,4 +4,5 @@ export type InputProps = {
     placeholder?: string;
     clearable?: boolean;
     label?: string;
+    hasError?: boolean;
 }
